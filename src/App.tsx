@@ -1,15 +1,15 @@
 // web-app/src/App.tsx
 
-import React, { useState, useEffect, FormEvent } from 'react'; // Import FormEvent
+import React, { useState, useEffect, FormEvent } from 'react';
 import axios from 'axios';
 import { useNavigate, Routes, Route, BrowserRouter } from 'react-router-dom';
 import AcceptAssignmentPage from './AcceptAssignmentPage';
-import ReviewAssignmentPage from './ReviewAssignmentPage'; // Corrected path
+import ReviewAssignmentPage from './ReviewAssignmentPage';
 import HelperRegistrationPage from './HelperRegistrationPage';
 import AdminDashboardPage from './AdminDashboardPage';
 import HelperDashboardPage from './HelperDashboardPage';
 import PayHelperPage from './PayHelperPage';
-import AuthenticatedLayout from './AuthenticatedLayout'; // NEW: Import AuthenticatedLayout
+import AuthenticatedLayout from './AuthenticatedLayout';
 
 
 // IMPORTANT: Replace with your actual backend URL
@@ -80,12 +80,6 @@ export interface UnpopulatedAssignmentData { // Exported for use in other compon
   paidAt: string | null;
 }
 
-// Define the interface for the API response containing assignments
-interface AssignmentsApiResponse {
-  message: string;
-  assignments: AssignmentData[]; // This array will contain *populated* data
-}
-
 // Define the interface for the successful response from /auth/discord/exchange-code or /auth/local/login
 interface AuthResponse {
   message: string;
@@ -148,7 +142,7 @@ function App() {
           navigate('/admin-dashboard');
         } else if (parsedUserData.roles.includes('helper')) {
           navigate('/helper-dashboard');
-        } else { // If client, or no specific dashboard, redirect to login as client frontend is removed
+        } else { // If client or no specific role, redirect to login as client frontend is removed
           navigate('/login'); 
         }
       } else {
@@ -272,13 +266,10 @@ function App() {
 
   // A simple Login Page component
   const LoginPage: React.FC = () => {
-    const [usernameInput, setUsernameInput] = useState('');
-    const [passwordInput, setPasswordInput] = useState('');
-
-    const handleLoginSubmit = (e: FormEvent) => {
-      e.preventDefault();
-      handleLocalLogin(usernameInput, passwordInput);
-    };
+    // OLD: The following state and function were removed as they are not used in this component.
+    // const [usernameInput, setUsernameInput] = useState('');
+    // const [passwordInput, setPasswordInput] = useState('');
+    // const handleLoginSubmit = (e: FormEvent) => { e.preventDefault(); handleLocalLogin(usernameInput, passwordInput); };
 
     // NEW: Redirect if already logged in (only for helper/admin)
     useEffect(() => {
@@ -296,7 +287,8 @@ function App() {
           console.error("Error parsing stored user data in LoginPage useEffect:", e);
         }
       }
-    }, [navigate]); // Depend on navigate to avoid stale closures
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // Removed 'navigate' from dependency array as it's a stable reference
 
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-discord_dark to-discord_darkest p-4">
@@ -358,7 +350,8 @@ function App() {
           console.error("Error parsing stored user data in LocalLoginPage useEffect:", e);
         }
       }
-    }, [navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // Removed 'navigate' from dependency array as it's a stable reference
 
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-discord_dark to-discord_darkest text-discord_white p-4 sm:p-6 lg:p-8">
